@@ -1,5 +1,6 @@
 from flask_restful import Resource,reqparse,abort,Api
 from backend.model.shFood import Shfood
+from backend.model.foodkey import Foodkey
 import time
 
 
@@ -44,4 +45,13 @@ class Takekey(Resource):
     def __init__(self):
         super(Takekey, self).__init__()
         self.parser = reqparse.RequestParser()
+    def post(self):
+        self.parser.add_argument('type', type=str)
+        args = self.parser.parse_args()
+        businessscope = Foodkey.query.filter_by(e_type=args['type']).all()
+        resultlist=[]
+        if len(businessscope)>1:
+            for each in businessscope:
+                resultlist.append(each.name)
+        return {'keylist':resultlist}
 
